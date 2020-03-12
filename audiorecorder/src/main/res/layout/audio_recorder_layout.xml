@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EEE"
@@ -58,14 +59,22 @@
             android:layout_height="wrap_content"
             android:layout_weight="10"
             android:background="#aaa"
-            android:minHeight="50dp">
+            android:minHeight="50dp"
+            android:orientation="vertical">
 
             <pereira.agnaldo.audiorecorder.HorizontalWaveView
                 android:id="@+id/horizontal_wave"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp" />
+                android:layout_height="30dp" />
+
+            <TextView
+                android:id="@+id/timer_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:gravity="end"
+                android:text="00:00"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 

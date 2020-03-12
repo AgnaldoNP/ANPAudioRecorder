@@ -117,7 +117,8 @@ class AudioRecorderView @JvmOverloads constructor(
     }
 
     private fun onTimerCountCallbackReceive(currentTime: Long, maxTime: Long) {
-        android.util.Log.d("ANP", "currentTime: " + currentTime);
+        android.util.Log.d("ANP", "currentTime: " + currentTime + "; maxTime: " + maxTime)
+        setTimer((currentTime / 1000).toInt())
     }
 
     private fun onRecordStateChangeListener(recordState: RecordState) {
@@ -170,7 +171,7 @@ class AudioRecorderView @JvmOverloads constructor(
     }
 
     private fun onSeekCompleteListener(mediaPlayer: MediaPlayer) {
-
+        onPauseButtonClicked()
     }
 
     private fun startMediaPlayer() {
@@ -215,6 +216,20 @@ class AudioRecorderView @JvmOverloads constructor(
             mediaPlayer.stop()
             mediaPlayer.reset()
             isMediaPlayerPrepared = false
+        }
+    }
+
+    /////////////////////////timer///////////////////////
+    private fun setTimer(seconds: Int) {
+        val timerSeconds = seconds % 60
+        val timerMinutes = (seconds - timerSeconds) / 60
+
+        val secondsString = timerSeconds.toString().padStart(2, '0')
+        val minutesString = timerMinutes.toString().padStart(2, '0')
+
+        val timeFormatted = "$minutesString:$secondsString"
+        timer_view.post {
+            timer_view.text = timeFormatted
         }
     }
 
