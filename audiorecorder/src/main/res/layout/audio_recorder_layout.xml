@@ -67,6 +67,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
 
+            <SeekBar
+                android:id="@+id/play_pause_seek"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:max="100"/>
+
             <TextView
                 android:id="@+id/timer_view"
                 android:layout_width="wrap_content"

@@ -3,17 +3,22 @@ package pereira.agnaldo.audiorecorder
 import android.content.Context
 import android.media.MediaPlayer
 import android.util.AttributeSet
+import android.view.DragEvent
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.LinearLayout
+import android.widget.SeekBar
 import androidx.core.view.isVisible
 import com.github.windsekirun.naraeaudiorecorder.NaraeAudioRecorder
 import com.github.windsekirun.naraeaudiorecorder.chunk.AudioChunk
 import com.github.windsekirun.naraeaudiorecorder.config.AudioRecordConfig
+import com.github.windsekirun.naraeaudiorecorder.extensions.runOnUiThread
 import com.github.windsekirun.naraeaudiorecorder.model.RecordState
 import com.github.windsekirun.naraeaudiorecorder.source.NoiseAudioSource
 import kotlinx.android.synthetic.main.audio_recorder_layout.view.*
 import java.io.File
 import java.io.FileInputStream
+import java.util.*
 
 
 class AudioRecorderView @JvmOverloads constructor(
@@ -32,6 +37,9 @@ class AudioRecorderView @JvmOverloads constructor(
         File(context.cacheDir, "record3.wav")
     private var isRecording = false
 
+    var duration = 0L
+    var amoungToUpdate = 0L
+
     init {
         orientation = VERTICAL
         getStyles(attrs, defStyleAttr)
@@ -43,11 +51,19 @@ class AudioRecorderView @JvmOverloads constructor(
         record_button.setOnClickListener { onRecordClicked() }
         delete_button.setOnClickListener { onDeleteRecord() }
 
-        audioCapture.setFftListener(object : AudioCapture.FFTListener {
-            override fun onAudioCaptured(bytes: ByteArray?) {
-                onFftlistenerReceived(bytes)
+        play_pause_seek.isVisible = false
+
+        play_pause_seek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    setMediaPlayerProgress(progress)
+                }
             }
         })
+
+        audioCapture.setFftListener { bytes -> onFftListenerReceived(bytes) }
     }
 
     private fun initializeAudioRecorder() {
@@ -91,6 +107,7 @@ class AudioRecorderView @JvmOverloads constructor(
         stop_button.isVisible = true
         delete_button.isVisible = false
         horizontal_wave.isVisible = true
+        play_pause_seek.isVisible = false
 
         if (!isRecording) {
             initializeAudioRecorder()
@@ -105,6 +122,7 @@ class AudioRecorderView @JvmOverloads constructor(
         stop_button.isVisible = false
         delete_button.isVisible = true
         horizontal_wave.isVisible = false
+        play_pause_seek.isVisible = true
 
         if (isRecording) {
             audioRecorder.stopRecording()
@@ -134,6 +152,7 @@ class AudioRecorderView @JvmOverloads constructor(
         stop_button.isVisible = false
         delete_button.isVisible = true
         horizontal_wave.isVisible = false
+        play_pause_seek.isVisible = true
 
         audioCapture.start()
 
@@ -145,7 +164,6 @@ class AudioRecorderView @JvmOverloads constructor(
                 mediaPlayer.prepare()
                 mediaPlayer.setOnPreparedListener { onMediaPlayerPrepared() }
                 mediaPlayer.setOnCompletionListener { onMediaPlayerCompleted() }
-                mediaPlayer.setOnSeekCompleteListener { onSeekCompleteListener(it) }
             } catch (ex: Exception) {
                 ex.printStackTrace()
             } finally {
@@ -158,26 +176,41 @@ class AudioRecorderView @JvmOverloads constructor(
         } else {
             startMediaPlayer()
         }
-
     }
 
     private fun onMediaPlayerPrepared() {
+        duration = mediaPlayer.getDuration().toLong()
+        amoungToUpdate = duration / 100
+
         isMediaPlayerPrepared = true
         startMediaPlayer()
     }
 
-    private fun onMediaPlayerCompleted() {
-        onPauseButtonClicked()
+    private fun updateMediaPlayerProgress() {
+        if (mediaPlayer.isPlaying) {
+            play_pause_seek.post {
+                if (!(amoungToUpdate * play_pause_seek.progress >= duration)) {
+                    val progress = play_pause_seek.progress + 1
+                    play_pause_seek.progress = progress
+                }
+            }
+            postDelayed({ updateMediaPlayerProgress() }, amoungToUpdate)
+        }
     }
 
-    private fun onSeekCompleteListener(mediaPlayer: MediaPlayer) {
+    private fun onMediaPlayerCompleted() {
         onPauseButtonClicked()
+        play_pause_seek.progress = 0
     }
 
     private fun startMediaPlayer() {
         if (isMediaPlayerPrepared) {
+            setMediaPlayerProgress(play_pause_seek.progress)
+
             mediaPlayer.start()
             audioCapture.start()
+
+            postDelayed({ updateMediaPlayerProgress() }, amoungToUpdate)
         }
     }
 
@@ -188,6 +221,7 @@ class AudioRecorderView @JvmOverloads constructor(
         stop_button.isVisible = false
         delete_button.isVisible = true
         horizontal_wave.isVisible = false
+        play_pause_seek.isVisible = true
 
         audioCapture.stop()
         if (mediaPlayer.isPlaying) {
@@ -195,11 +229,7 @@ class AudioRecorderView @JvmOverloads constructor(
         }
     }
 
-    private fun onFftlistenerReceived(bytes: ByteArray?) {
-        val amp = Helper.map(Math.abs((bytes?.get(0) ?: 0).toFloat()), 0F, 256F, 10F, 50000F)
-//                audioAmplitudeView?.update(amp.toInt());
-    }
-
+    private fun onFftListenerReceived(bytes: ByteArray?) {}
 
     ///////////////////////////////////////delete ////////////////////////////
     private fun onDeleteRecord() {
@@ -209,6 +239,7 @@ class AudioRecorderView @JvmOverloads constructor(
         stop_button.isVisible = false
         delete_button.isVisible = false
         horizontal_wave.isVisible = true
+        play_pause_seek.isVisible = false
 
         horizontal_wave.clearWave()
 
@@ -231,6 +262,12 @@ class AudioRecorderView @JvmOverloads constructor(
         timer_view.post {
             timer_view.text = timeFormatted
         }
+    }
+
+    /////////////////////////// seek progress ///////////////////////
+    private fun setMediaPlayerProgress(progress: Int) {
+        val seekTo = duration * (progress / 100f)
+        mediaPlayer.seekTo(seekTo.toInt())
     }
 
 }
