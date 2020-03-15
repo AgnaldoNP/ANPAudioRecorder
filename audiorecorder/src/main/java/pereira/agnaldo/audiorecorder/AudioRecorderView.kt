@@ -32,26 +32,126 @@ class AudioRecorderView @JvmOverloads constructor(
         File(context.cacheDir, "record3.wav")
     private var isRecording = false
 
-    private var recordedAudioDuration = 0L
+    private var totalRecordedAudioDuration = 0L
     private var milliSecondsPerPercentage = 0L
     private var totalRecordedAudioDurationFormatted = "00:00"
 
+    private var currentRecorderTime = 0L
+
+    fun getAudioRecordedDuration() = totalRecordedAudioDuration
+
+    fun getAudioRecorded() = recordFile
 
     /////////////////////// listeners ////////////////////////
+    private var onStartRecordingListener: (() -> Unit)? = null
+    private var onIStartRecordingListener: OnStartRecordingListener? = null
+
+    fun setOnStartRecording(listener: () -> Unit) {
+        onStartRecordingListener = listener
+    }
+
+    fun setOnStartRecording(listener: OnStartRecordingListener) {
+        this.onIStartRecordingListener = listener
+    }
+
+    interface OnStartRecordingListener {
+        fun onStartRecording()
+    }
+
+
     private var onFinishRecordListener: ((File) -> Unit)? = null
     private var onIFinishRecordListener: OnFinishRecordListener? = null
 
-
-    fun setOnFinishRecord(file: (file: File) -> Unit) {
-        onFinishRecordListener = file
+    fun setOnFinishRecord(listener: (file: File) -> Unit) {
+        onFinishRecordListener = listener
     }
 
-    fun setOnFinishRecord(onIFinishRecordListener: OnFinishRecordListener) {
-        this.onIFinishRecordListener = onIFinishRecordListener
+    fun setOnFinishRecord(listener: OnFinishRecordListener) {
+        this.onIFinishRecordListener = listener
     }
 
     interface OnFinishRecordListener {
         fun onFinishRecordListener(file: File)
+    }
+
+
+    private var onPlayListener: (() -> Unit)? = null
+    private var onIPlayListener: OnPlayListener? = null
+
+    fun setOnPlay(listener: () -> Unit) {
+        onPlayListener = listener
+    }
+
+    fun setOnPlay(listener: OnPlayListener) {
+        this.onIPlayListener = listener
+    }
+
+    interface OnPlayListener {
+        fun onPlay()
+    }
+
+
+    private var onPauseListener: (() -> Unit)? = null
+    private var onIPauseListener: OnPauseListener? = null
+
+    fun setOnPause(listener: () -> Unit) {
+        onPauseListener = listener
+    }
+
+    fun setOnPause(listener: OnPauseListener) {
+        this.onIPauseListener = listener
+    }
+
+    interface OnPauseListener {
+        fun onPause()
+    }
+
+
+    private var onResumeListener: (() -> Unit)? = null
+    private var onIResumeListener: OnResumeListener? = null
+
+    fun setOnResume(listener: () -> Unit) {
+        onResumeListener = listener
+    }
+
+    fun setOnResume(listener: OnResumeListener) {
+        this.onIResumeListener = listener
+    }
+
+    interface OnResumeListener {
+        fun onResume()
+    }
+
+
+    private var onFinishPlayListener: (() -> Unit)? = null
+    private var onIFinishPlayListener: OnFinishPlayListener? = null
+
+    fun setOnFinishPlay(listener: () -> Unit) {
+        onFinishPlayListener = listener
+    }
+
+    fun setOnFinishPlay(listener: OnFinishPlayListener) {
+        this.onIFinishPlayListener = listener
+    }
+
+    interface OnFinishPlayListener {
+        fun onFinishPlayListener()
+    }
+
+
+    private var onDeleteListener: (() -> Unit)? = null
+    private var onIDeleteListener: OnDeleteListener? = null
+
+    fun setOnDelete(listener: () -> Unit) {
+        onDeleteListener = listener
+    }
+
+    fun setOnDelete(listener: OnDeleteListener) {
+        this.onIDeleteListener = listener
+    }
+
+    interface OnDeleteListener {
+        fun onDelete()
     }
     /////////////////////// end listeners ////////////////////////
 
@@ -131,6 +231,9 @@ class AudioRecorderView @JvmOverloads constructor(
             initializeAudioRecorder()
             audioRecorder.startRecording(context)
         }
+
+        onStartRecordingListener?.invoke()
+        onIStartRecordingListener?.onStartRecording()
     }
 
     private fun onStopButtonClicked() {
@@ -142,7 +245,7 @@ class AudioRecorderView @JvmOverloads constructor(
         horizontal_wave.isVisible = false
         play_pause_seek.isVisible = true
 
-        recordedAudioDuration = currentRecorderTime
+        totalRecordedAudioDuration = currentRecorderTime
         if (isRecording) {
             isRecording = false
             audioRecorder.stopRecording()
@@ -156,7 +259,6 @@ class AudioRecorderView @JvmOverloads constructor(
         horizontal_wave.updateAudioWave(byteArray)
     }
 
-    private var currentRecorderTime = 0L
     private fun onTimerCountCallbackReceive(currentTime: Long) {
         currentRecorderTime = currentTime
         setTimer((currentTime / 1000).toInt())
@@ -168,10 +270,10 @@ class AudioRecorderView @JvmOverloads constructor(
             onFinishRecordListener?.invoke(recordFile)
             onIFinishRecordListener?.onFinishRecordListener(recordFile)
 
-            recordedAudioDuration = currentRecorderTime
-            milliSecondsPerPercentage = recordedAudioDuration / 100
+            totalRecordedAudioDuration = currentRecorderTime
+            milliSecondsPerPercentage = totalRecordedAudioDuration / 100
             totalRecordedAudioDurationFormatted =
-                getTimeFormatted((recordedAudioDuration / 1000).toInt())
+                getTimeFormatted((totalRecordedAudioDuration / 1000).toInt())
         }
     }
 
@@ -211,10 +313,10 @@ class AudioRecorderView @JvmOverloads constructor(
     }
 
     private fun onMediaPlayerPrepared() {
-        recordedAudioDuration = mediaPlayer.duration.toLong()
-        milliSecondsPerPercentage = recordedAudioDuration / 100
+        totalRecordedAudioDuration = mediaPlayer.duration.toLong()
+        milliSecondsPerPercentage = totalRecordedAudioDuration / 100
         totalRecordedAudioDurationFormatted =
-            getTimeFormatted((recordedAudioDuration / 1000).toInt())
+            getTimeFormatted((totalRecordedAudioDuration / 1000).toInt())
 
         isMediaPlayerPrepared = true
         setMediaPlayerProgress(0)
@@ -224,7 +326,7 @@ class AudioRecorderView @JvmOverloads constructor(
     private fun updateMediaPlayerProgress() {
         if (mediaPlayer.isPlaying) {
             play_pause_seek.post {
-                if (milliSecondsPerPercentage * play_pause_seek.progress < recordedAudioDuration) {
+                if (milliSecondsPerPercentage * play_pause_seek.progress < totalRecordedAudioDuration) {
                     setTimer((mediaPlayer.currentPosition / 1000))
 
                     val progress = play_pause_seek.progress + 1
@@ -239,10 +341,21 @@ class AudioRecorderView @JvmOverloads constructor(
         onPauseButtonClicked()
         play_pause_seek.progress = 0
         setMediaPlayerProgress(0)
+
+        onFinishPlayListener?.invoke()
+        onIFinishPlayListener?.onFinishPlayListener()
     }
 
     private fun startMediaPlayer() {
         if (isMediaPlayerPrepared) {
+            if (play_pause_seek.progress == 0) {
+                onPlayListener?.invoke()
+                onIPlayListener?.onPlay()
+            } else {
+                onResumeListener?.invoke()
+                onIResumeListener?.onResume()
+            }
+
             setMediaPlayerProgress(play_pause_seek.progress)
 
             mediaPlayer.start()
@@ -264,6 +377,9 @@ class AudioRecorderView @JvmOverloads constructor(
         audioCapture.stop()
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
+
+            onPauseListener?.invoke()
+            onIPauseListener?.onPause()
         }
     }
 
@@ -286,9 +402,18 @@ class AudioRecorderView @JvmOverloads constructor(
             mediaPlayer.reset()
             isMediaPlayerPrepared = false
         }
+
+        recordFile.deleteIfExists()
+
         isRecording = false
+        totalRecordedAudioDuration = 0
+        totalRecordedAudioDurationFormatted = "00:00"
+
         setMediaPlayerProgress(0)
         timer_view.post { timer_view.text = "00:00" }
+
+        onDeleteListener?.invoke()
+        onIDeleteListener?.onDelete()
     }
 
     /////////////////////////timer///////////////////////
@@ -316,7 +441,7 @@ class AudioRecorderView @JvmOverloads constructor(
 
     /////////////////////////// seek progress ///////////////////////
     private fun setMediaPlayerProgress(progress: Int) {
-        val seekTo = recordedAudioDuration * (progress / 100f)
+        val seekTo = totalRecordedAudioDuration * (progress / 100f)
         if (isMediaPlayerPrepared) {
             mediaPlayer.seekTo(seekTo.toInt())
         }
