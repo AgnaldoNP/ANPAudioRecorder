@@ -1,5 +1,7 @@
 package pereira.agnaldo.audiorecorder
 
+import java.io.File
+
 class Helper {
 
     companion object {
@@ -9,3 +11,5 @@ class Helper {
     }
 
 }
+
+fun File.deleteIfExists() = takeIf { this.exists() }?.delete()

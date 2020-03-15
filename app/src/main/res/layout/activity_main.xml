@@ -6,6 +6,7 @@
     tools:context=".MainActivity">
 
     <pereira.agnaldo.audiorecorder.AudioRecorderView
+        android:id="@+id/recordView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true" />
