@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="anp_base_color">#1D9CE4</color>
+    <color name="anp_time_text_color">#941D9CE4</color>
+    <color name="anp_seek_light">#631D9CE4</color>
+    <color name="anp_seek_dark">#1D9CE4</color>
+    <color name="anp_seek_circle">#1D9CE4</color>
+</resources>

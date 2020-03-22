@@ -27,7 +27,7 @@ class HorizontalWaveView @JvmOverloads constructor(
         mBackgroundPaint.color = Color.TRANSPARENT
 
         mCurrentPaint.style = Paint.Style.STROKE
-        mCurrentPaint.color = Color.RED
+        mCurrentPaint.color = resources.getColor(R.color.anp_base_color)
         mCurrentPaint.strokeWidth = 4f
         mCurrentPaint.alpha = 200
 

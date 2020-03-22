@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="min_height">50dp</dimen>
+    <dimen name="min_height">60dp</dimen>
+    <dimen name="component_padding">6dp</dimen>
+    <dimen name="seek_bar_height">20dp</dimen>
+    <dimen name="anp_time_text_size">18sp</dimen>
+    <dimen name="anp_icons_width">40dp</dimen>
+    <dimen name="anp_icons_height">40dp</dimen>
 </resources>
