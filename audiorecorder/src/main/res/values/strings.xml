@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">AudioRecorder</string>
-    <string name="play_recorded_sound">Play recorded sound</string>
-    <string name="delete_audio_recorded">Delete audio recorded</string>
-    <string name="record_audio">Record audio</string>
-    <string name="pause_audio_being_played">Pause audio being played</string>
-    <string name="stop_audio_being_played">Stop audio being played</string>
+    <string name="anp_ar_play_recorded_sound">Play recorded audio</string>
+    <string name="anp_ar_delete_audio_recorded">Delete recorded audio</string>
+    <string name="anp_ar_record_audio">Record audio</string>
+    <string name="anp_ar_pause_audio_being_played">Pause audio being played</string>
+    <string name="anp_ar_stop_audio_being_played">Stop audio being played</string>
+    <string name="anp_ar_zero_time">00:00</string>
 </resources>

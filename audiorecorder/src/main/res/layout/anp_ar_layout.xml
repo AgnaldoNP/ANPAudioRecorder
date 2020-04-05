@@ -3,49 +3,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_anp_ar_layout"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:background="#aaa"
-    android:padding="@dimen/component_padding">
+    android:padding="@dimen/anp_ar_component_padding">
 
     <RelativeLayout
         android:id="@+id/anp_actions_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="top"
-        android:minHeight="@dimen/min_height">
+        android:minHeight="@dimen/anp_ar_min_height">
 
         <ImageView
             android:id="@+id/record_button"
-            android:layout_width="@dimen/anp_icons_width"
-            android:layout_height="@dimen/anp_icons_height"
-            android:contentDescription="@string/record_audio"
-            android:src="@drawable/ic_mic"
+            android:layout_width="@dimen/anp_ar_icons_width"
+            android:layout_height="@dimen/anp_ar_icons_height"
+            android:contentDescription="@string/anp_ar_record_audio"
+            android:src="@drawable/ic_anp_ar_mic"
             android:visibility="visible" />
-
 
         <ImageView
             android:id="@+id/play_button"
-            android:layout_width="@dimen/anp_icons_width"
-            android:layout_height="@dimen/anp_icons_height"
-            android:contentDescription="@string/play_recorded_sound"
-            android:src="@drawable/ic_play"
+            android:layout_width="@dimen/anp_ar_icons_width"
+            android:layout_height="@dimen/anp_ar_icons_height"
+            android:contentDescription="@string/anp_ar_play_recorded_sound"
+            android:src="@drawable/ic_anp_ar_play"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/pause_button"
-            android:layout_width="@dimen/anp_icons_width"
-            android:layout_height="@dimen/anp_icons_height"
-            android:contentDescription="@string/pause_audio_being_played"
-            android:src="@drawable/ic_pause"
+            android:layout_width="@dimen/anp_ar_icons_width"
+            android:layout_height="@dimen/anp_ar_icons_height"
+            android:contentDescription="@string/anp_ar_pause_audio_being_played"
+            android:src="@drawable/ic_anp_ar_pause"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/stop_button"
-            android:layout_width="@dimen/anp_icons_width"
-            android:layout_height="@dimen/anp_icons_height"
-            android:contentDescription="@string/stop_audio_being_played"
-            android:src="@drawable/ic_stop"
+            android:layout_width="@dimen/anp_ar_icons_width"
+            android:layout_height="@dimen/anp_ar_icons_height"
+            android:contentDescription="@string/anp_ar_stop_audio_being_played"
+            android:src="@drawable/ic_anp_ar_stop"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -58,13 +57,15 @@
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@id/anp_actions_layout"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingStart="0dp"
+        android:paddingEnd="4dp">
 
         <pereira.agnaldo.audiorecorder.HorizontalWaveView
             android:id="@+id/horizontal_wave"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <SeekBar
             android:id="@+id/play_pause_seek"
@@ -72,7 +73,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="0dp"
-            android:progress="50" />
+            android:progress="50"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -95,11 +97,11 @@
             android:layout_weight="10"
             android:gravity="start|bottom"
             android:paddingStart="10dp"
-            android:text="00:00"
-            android:textColor="@color/anp_time_text_color"
-            android:textSize="@dimen/anp_time_text_size"
+            android:paddingEnd="0dp"
+            android:text="@string/anp_ar_zero_time"
+            android:textColor="@color/anp_ar_time_text_color"
+            android:textSize="@dimen/anp_ar_time_text_size"
             tools:ignore="HardcodedText" />
-
 
         <TextView
             android:id="@+id/timer_view"
@@ -107,9 +109,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:gravity="end"
-            android:text="00:00"
-            android:textColor="@color/anp_time_text_color"
-            android:textSize="@dimen/anp_time_text_size"
+            android:text="@string/anp_ar_zero_time"
+            android:textColor="@color/anp_ar_time_text_color"
+            android:textSize="@dimen/anp_ar_time_text_size"
             tools:ignore="HardcodedText" />
 
         <ImageView
@@ -118,12 +120,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_marginStart="4dp"
-            android:contentDescription="@string/delete_audio_recorded"
+            android:contentDescription="@string/anp_ar_delete_audio_recorded"
             android:foregroundGravity="bottom"
-            android:src="@drawable/ic_delete"
+            android:src="@drawable/ic_anp_ar_delete"
             android:visibility="visible" />
 
     </LinearLayout>
-
 
 </RelativeLayout>

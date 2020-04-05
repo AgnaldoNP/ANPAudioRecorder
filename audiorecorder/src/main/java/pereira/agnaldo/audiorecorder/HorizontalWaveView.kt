@@ -19,6 +19,14 @@ class HorizontalWaveView @JvmOverloads constructor(
     private var mCurrentPath = Path()
     private val mCurrentPaint = Paint()
     private val mBackgroundPaint = Paint()
+    internal var bytesSampleCount = 12
+
+    fun setBytesSampleCount(bytesSampleCount: Int) {
+        this.bytesSampleCount = bytesSampleCount
+        clearWave()
+    }
+
+    fun getBytesSampleCount(): Int = this.bytesSampleCount
 
     init {
         setLayerType(LAYER_TYPE_SOFTWARE, null)
@@ -27,10 +35,11 @@ class HorizontalWaveView @JvmOverloads constructor(
         mBackgroundPaint.color = Color.TRANSPARENT
 
         mCurrentPaint.style = Paint.Style.STROKE
-        mCurrentPaint.color = resources.getColor(R.color.anp_base_color)
+        mCurrentPaint.color = resources.getColor(R.color.anp_ar_wave_color)
         mCurrentPaint.strokeWidth = 4f
         mCurrentPaint.alpha = 200
 
+        clearWave()
     }
 
     fun updateAudioWave(audioData: ByteArray) {
@@ -39,27 +48,29 @@ class HorizontalWaveView @JvmOverloads constructor(
     }
 
     fun clearWave() {
-        mCurrentPath.reset()
-        invalidate()
+        post {
+            mCurrentPath.reset()
+            updateAudioWave(Helper.getBytesSampleWithZeros(bytesSampleCount))
+        }
     }
 
     private fun createAudioWave(audioData: ByteArray) {
-        val middleHeigth = (height / 2).toFloat()
+        val middleHeight = (height / 2).toFloat()
 
-        val byteCount = 12
         val width = width.toFloat()
-        val semiPeriod = width / (byteCount * 2)
+        val semiPeriod = width / (bytesSampleCount * 2)
         val norm = (height / 2).toFloat() / 165
 
         mCurrentPath.reset()
-        mCurrentPath.moveTo(0f, middleHeigth)
+        mCurrentPath.moveTo(0f, middleHeight)
         var lastX = 0f
-        var lastY = middleHeigth
+        var lastY = middleHeight
 
-        for (i in 1 until (byteCount * 2)) {
-            val byteIndice = if (i < byteCount) byteCount - i else i - byteCount
+        for (i in 1 until (bytesSampleCount * 2)) {
+            val byteIndice =
+                if (i < bytesSampleCount) bytesSampleCount - i else i - bytesSampleCount
             val aData = audioData[byteIndice]
-            val y = middleHeigth + aData * norm
+            val y = middleHeight + aData * norm
             val x = i * semiPeriod
             mCurrentPath.quadTo(
                 lastX, lastY,
@@ -73,10 +84,10 @@ class HorizontalWaveView @JvmOverloads constructor(
         mCurrentPath.quadTo(
             lastX, lastY,
             width,
-            middleHeigth
+            middleHeight
         )
 
-        mCurrentPath.lineTo(width, middleHeigth)
+        mCurrentPath.lineTo(width, middleHeight)
     }
 
     @Synchronized

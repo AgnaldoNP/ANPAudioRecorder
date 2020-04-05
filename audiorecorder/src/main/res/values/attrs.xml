@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="AudioRecorderView">
+        <attr name="recordIcon" format="reference" />
+        <attr name="playIcon" format="reference" />
+        <attr name="pauseIcon" format="reference" />
+        <attr name="stopIcon" format="reference" />
+        <attr name="deleteIcon" format="reference" />
+    </declare-styleable>
+
+    <attr name="AudioRecorderView" format="reference" />
+
+</resources>
