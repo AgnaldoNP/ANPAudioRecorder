@@ -2,12 +2,15 @@ package pereira.agnaldo.audiorecorder
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.media.MediaPlayer
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.SeekBar
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.isVisible
 import com.github.windsekirun.naraeaudiorecorder.NaraeAudioRecorder
@@ -16,6 +19,7 @@ import com.github.windsekirun.naraeaudiorecorder.config.AudioRecordConfig
 import com.github.windsekirun.naraeaudiorecorder.model.RecordState
 import com.github.windsekirun.naraeaudiorecorder.source.NoiseAudioSource
 import kotlinx.android.synthetic.main.anp_ar_layout.view.*
+import pereira.agnaldo.audiorecorder.Helper.Companion.lightenColor
 import java.io.File
 import java.io.FileInputStream
 
@@ -334,6 +338,7 @@ class AudioRecorderView @JvmOverloads constructor(
     private var customPauseIcon: Drawable? = null
     private var customStopIcon: Drawable? = null
     private var customDeleteIcon: Drawable? = null
+    private var customBaseColor: Int = 0
     private fun getStyles(attrs: AttributeSet?, defStyle: Int) {
         attrs?.let {
             val typedArray = context.obtainStyledAttributes(
@@ -345,6 +350,7 @@ class AudioRecorderView @JvmOverloads constructor(
             customPauseIcon = typedArray.getDrawable(R.styleable.AudioRecorderView_pauseIcon)
             customStopIcon = typedArray.getDrawable(R.styleable.AudioRecorderView_stopIcon)
             customDeleteIcon = typedArray.getDrawable(R.styleable.AudioRecorderView_deleteIcon)
+            customBaseColor = typedArray.getColor(R.styleable.AudioRecorderView_baseColor, 0)
 
             typedArray.recycle()
         }
@@ -356,6 +362,32 @@ class AudioRecorderView @JvmOverloads constructor(
         customPauseIcon?.let { pause_button.setImageDrawable(customPauseIcon) }
         customStopIcon?.let { stop_button.setImageDrawable(customStopIcon) }
         customDeleteIcon?.let { delete_button.setImageDrawable(customDeleteIcon) }
+
+        if (customBaseColor != 0) {
+            record_button.setColorFilter(customBaseColor)
+            play_button.setColorFilter(customBaseColor)
+            pause_button.setColorFilter(customBaseColor)
+            stop_button.setColorFilter(customBaseColor)
+
+            val customBaseColorLight = lightenColor(customBaseColor, 0.2F)
+            val customBaseColorLighter = lightenColor(customBaseColor, 0.22F)
+
+            timer_view.setTextColor(customBaseColorLight)
+            timer_view_current.setTextColor(customBaseColorLight)
+            horizontal_wave.setWaveColor(customBaseColorLight)
+            delete_button.setColorFilter(customBaseColorLighter)
+
+            play_pause_seek.apply {
+                thumb.setColorFilter(customBaseColor, PorterDuff.Mode.SRC_ATOP)
+                progressDrawable.setColorFilter(customBaseColor, PorterDuff.Mode.SRC_ATOP)
+            }
+
+            // TODO quando colocar opção customizada para background não aplicar esse trecho de código
+            anp_ar_component_layout.background?.setColorFilter(
+                customBaseColor, PorterDuff.Mode.SRC_ATOP
+            )
+        }
+
     }
 
     ////////////////////////////////record/////////////////////////////

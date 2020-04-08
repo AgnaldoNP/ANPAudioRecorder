@@ -28,6 +28,11 @@ class HorizontalWaveView @JvmOverloads constructor(
 
     fun getBytesSampleCount(): Int = this.bytesSampleCount
 
+    fun setWaveColor(color: Int) {
+        mCurrentPaint.color = color
+        invalidate()
+    }
+
     init {
         setLayerType(LAYER_TYPE_SOFTWARE, null)
 
