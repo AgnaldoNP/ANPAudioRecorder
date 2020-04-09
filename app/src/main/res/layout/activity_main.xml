@@ -27,6 +27,12 @@
             android:layout_marginBottom="10dp"
             android:minHeight="@dimen/anp_ar_min_height"
             app:recordIcon="@drawable/ic_headset_mic"
+            app:recordIconTint="#0000FF"
+            app:recordWaveTint="#00FF00"
+            app:playProgressTint="#FF0"
+            app:backgroundTint="#090090"
+            app:currentTimeTint="#F8A007"
+            app:totalTimeTint="#FF00FB"
             app:baseColor="#FF0000"/>
 
     </LinearLayout>

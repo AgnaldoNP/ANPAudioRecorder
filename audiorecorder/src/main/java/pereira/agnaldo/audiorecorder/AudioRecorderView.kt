@@ -4,13 +4,11 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
 import android.media.MediaPlayer
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.SeekBar
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.isVisible
 import com.github.windsekirun.naraeaudiorecorder.NaraeAudioRecorder
@@ -339,6 +337,21 @@ class AudioRecorderView @JvmOverloads constructor(
     private var customStopIcon: Drawable? = null
     private var customDeleteIcon: Drawable? = null
     private var customBaseColor: Int = 0
+
+    private var customRecordIconTint: Int = 0
+    private var customPlayIconTint: Int = 0
+    private var customPauseIconTint: Int = 0
+    private var customStopIconTint: Int = 0
+    private var customDeleteIconTint: Int = 0
+
+    private var customWaveTint: Int = 0
+    private var customProgressTint: Int = 0
+    private var customBackgroundTint: Int = 0
+
+    private var customTimeTint: Int = 0
+    private var customTotalTimeTint: Int = 0
+    private var customCurrentTimeTint: Int = 0
+
     private fun getStyles(attrs: AttributeSet?, defStyle: Int) {
         attrs?.let {
             val typedArray = context.obtainStyledAttributes(
@@ -351,6 +364,27 @@ class AudioRecorderView @JvmOverloads constructor(
             customStopIcon = typedArray.getDrawable(R.styleable.AudioRecorderView_stopIcon)
             customDeleteIcon = typedArray.getDrawable(R.styleable.AudioRecorderView_deleteIcon)
             customBaseColor = typedArray.getColor(R.styleable.AudioRecorderView_baseColor, 0)
+
+            customRecordIconTint =
+                typedArray.getColor(R.styleable.AudioRecorderView_recordIconTint, 0)
+            customPlayIconTint = typedArray.getColor(R.styleable.AudioRecorderView_playIconTint, 0)
+            customPauseIconTint =
+                typedArray.getColor(R.styleable.AudioRecorderView_pauseIconTint, 0)
+            customStopIconTint = typedArray.getColor(R.styleable.AudioRecorderView_stopIconTint, 0)
+            customDeleteIconTint =
+                typedArray.getColor(R.styleable.AudioRecorderView_deleteIconTint, 0)
+            customWaveTint =
+                typedArray.getColor(R.styleable.AudioRecorderView_recordWaveTint, 0)
+            customProgressTint =
+                typedArray.getColor(R.styleable.AudioRecorderView_playProgressTint, 0)
+            customBackgroundTint =
+                typedArray.getColor(R.styleable.AudioRecorderView_backgroundTint, 0)
+
+            customTimeTint = typedArray.getColor(R.styleable.AudioRecorderView_timeTint, 0)
+            customTotalTimeTint =
+                typedArray.getColor(R.styleable.AudioRecorderView_totalTimeTint, 0)
+            customCurrentTimeTint =
+                typedArray.getColor(R.styleable.AudioRecorderView_currentTimeTint, 0)
 
             typedArray.recycle()
         }
@@ -388,6 +422,48 @@ class AudioRecorderView @JvmOverloads constructor(
             )
         }
 
+        if (customRecordIconTint != 0) {
+            record_button.setColorFilter(customRecordIconTint)
+        }
+        if (customPlayIconTint != 0) {
+            play_button.setColorFilter(customPlayIconTint)
+        }
+        if (customPauseIconTint != 0) {
+            pause_button.setColorFilter(customPauseIconTint)
+        }
+        if (customStopIconTint != 0) {
+            stop_button.setColorFilter(customStopIconTint)
+        }
+        if (customDeleteIconTint != 0) {
+            delete_button.setColorFilter(customDeleteIconTint)
+        }
+
+        if (customWaveTint != 0) {
+            horizontal_wave.setWaveColor(customWaveTint)
+        }
+        if (customBackgroundTint != 0) {
+            // TODO quando colocar opção customizada para background não aplicar esse trecho de código
+            anp_ar_component_layout.background?.setColorFilter(
+                customBackgroundTint, PorterDuff.Mode.SRC_ATOP
+            )
+        }
+        if (customProgressTint != 0) {
+            play_pause_seek.apply {
+                thumb.setColorFilter(customProgressTint, PorterDuff.Mode.SRC_ATOP)
+                progressDrawable.setColorFilter(customProgressTint, PorterDuff.Mode.SRC_ATOP)
+            }
+        }
+
+        if (customTimeTint != 0) {
+            timer_view_current.setTextColor(customTimeTint)
+            timer_view.setTextColor(customTimeTint)
+        }
+        if (customTotalTimeTint != 0) {
+            timer_view.setTextColor(customTotalTimeTint)
+        }
+        if (customCurrentTimeTint != 0) {
+            timer_view_current.setTextColor(customCurrentTimeTint)
+        }
     }
 
     ////////////////////////////////record/////////////////////////////

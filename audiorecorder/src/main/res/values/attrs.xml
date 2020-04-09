@@ -8,6 +8,17 @@
         <attr name="stopIcon" format="reference" />
         <attr name="deleteIcon" format="reference" />
         <attr name="baseColor" format="color" />
+        <attr name="recordIconTint" format="color" />
+        <attr name="playIconTint" format="color" />
+        <attr name="pauseIconTint" format="color" />
+        <attr name="stopIconTint" format="color" />
+        <attr name="deleteIconTint" format="color" />
+        <attr name="recordWaveTint" format="color" />
+        <attr name="playProgressTint" format="color" />
+        <attr name="backgroundTint" format="color" />
+        <attr name="timeTint" format="color" />
+        <attr name="totalTimeTint" format="color" />
+        <attr name="currentTimeTint" format="color" />
     </declare-styleable>
 
     <attr name="AudioRecorderView" format="reference" />
