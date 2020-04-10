@@ -3,6 +3,7 @@ package pereira.agnaldo.audiorecorder
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.util.AttributeSet
@@ -21,20 +22,18 @@ import pereira.agnaldo.audiorecorder.Helper.Companion.lightenColor
 import java.io.File
 import java.io.FileInputStream
 
-
+@Suppress("MemberVisibilityCanBePrivate")
 class AudioRecorderView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    private var audioCapture = AudioCapture(0)
     private val mediaPlayer = MediaPlayer()
     private var isMediaPlayerPrepared = false
 
     private lateinit var audioRecorder: NaraeAudioRecorder
-    private val recordFile =
-        File(context.cacheDir, "record3.wav")
+    private var recordFile: File
     private var isRecording = false
 
     private var totalRecordedAudioDuration = 0L
@@ -43,30 +42,18 @@ class AudioRecorderView @JvmOverloads constructor(
 
     private var currentRecorderTime = 0L
 
-    /**
-     * TODO insert documentation
-     */
     fun getAudioRecordedDuration() = totalRecordedAudioDuration
 
-    /**
-     * TODO insert documentation
-     */
     fun getAudioRecorded() = recordFile
 
     /////////////////////// listeners ////////////////////////
     private var onStartRecordingListener: (() -> Unit)? = null
     private var onIStartRecordingListener: OnStartRecordingListener? = null
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnStartRecording(listener: () -> Unit) {
         onStartRecordingListener = listener
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnStartRecording(listener: OnStartRecordingListener) {
         this.onIStartRecordingListener = listener
     }
@@ -79,16 +66,10 @@ class AudioRecorderView @JvmOverloads constructor(
     private var onFinishRecordListener: ((File) -> Unit)? = null
     private var onIFinishRecordListener: OnFinishRecordListener? = null
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnFinishRecord(listener: (file: File) -> Unit) {
         onFinishRecordListener = listener
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnFinishRecord(listener: OnFinishRecordListener) {
         this.onIFinishRecordListener = listener
     }
@@ -101,16 +82,10 @@ class AudioRecorderView @JvmOverloads constructor(
     private var onPlayListener: (() -> Unit)? = null
     private var onIPlayListener: OnPlayListener? = null
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnPlay(listener: () -> Unit) {
         onPlayListener = listener
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnPlay(listener: OnPlayListener) {
         this.onIPlayListener = listener
     }
@@ -123,16 +98,10 @@ class AudioRecorderView @JvmOverloads constructor(
     private var onPauseListener: (() -> Unit)? = null
     private var onIPauseListener: OnPauseListener? = null
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnPause(listener: () -> Unit) {
         onPauseListener = listener
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnPause(listener: OnPauseListener) {
         this.onIPauseListener = listener
     }
@@ -145,16 +114,10 @@ class AudioRecorderView @JvmOverloads constructor(
     private var onResumeListener: (() -> Unit)? = null
     private var onIResumeListener: OnResumeListener? = null
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnResume(listener: () -> Unit) {
         onResumeListener = listener
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnResume(listener: OnResumeListener) {
         this.onIResumeListener = listener
     }
@@ -167,16 +130,10 @@ class AudioRecorderView @JvmOverloads constructor(
     private var onFinishPlayListener: (() -> Unit)? = null
     private var onIFinishPlayListener: OnFinishPlayListener? = null
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnFinishPlay(listener: () -> Unit) {
         onFinishPlayListener = listener
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnFinishPlay(listener: OnFinishPlayListener) {
         this.onIFinishPlayListener = listener
     }
@@ -189,16 +146,10 @@ class AudioRecorderView @JvmOverloads constructor(
     private var onDeleteListener: (() -> Unit)? = null
     private var onIDeleteListener: OnDeleteListener? = null
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnDelete(listener: () -> Unit) {
         onDeleteListener = listener
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setOnDelete(listener: OnDeleteListener) {
         this.onIDeleteListener = listener
     }
@@ -209,72 +160,42 @@ class AudioRecorderView @JvmOverloads constructor(
     /////////////////////// end listeners ////////////////////////
 
     /////////////////// custom look and fell//////////////////////
-    /**
-     * TODO insert documentation
-     */
     fun setRecordIcon(icon: Drawable?) {
         customRecordIcon = icon
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setRecordIcon(icon: Bitmap?) {
         setRecordIcon(icon?.toDrawable(resources))
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setPlayIcon(icon: Drawable?) {
         customPlayIcon = icon
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setPlayIcon(icon: Bitmap?) {
         setPlayIcon(icon?.toDrawable(resources))
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setPauseIcon(icon: Drawable?) {
         customPauseIcon = icon
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setPauseIcon(icon: Bitmap?) {
         setPauseIcon(icon?.toDrawable(resources))
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setStopIcon(icon: Drawable?) {
         customStopIcon = icon
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setStopIcon(icon: Bitmap?) {
         setStopIcon(icon?.toDrawable(resources))
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setDeleteIcon(icon: Drawable?) {
         customDeleteIcon = icon
     }
 
-    /**
-     * TODO insert documentation
-     */
     fun setDeleteIcon(icon: Bitmap?) {
         setDeleteIcon(icon?.toDrawable(resources))
     }
@@ -284,6 +205,8 @@ class AudioRecorderView @JvmOverloads constructor(
         orientation = VERTICAL
         getStyles(attrs, defStyleAttr)
         post { loadCustomResources() }
+
+        recordFile = File(context.cacheDir, "record_${System.currentTimeMillis()}.wav")
 
         LayoutInflater.from(context).inflate(R.layout.anp_ar_layout, this)
         play_button.setOnClickListener { onPlayButtonClicked() }
@@ -305,7 +228,6 @@ class AudioRecorderView @JvmOverloads constructor(
             }
         })
 
-        audioCapture.setFftListener { bytes -> onFftListenerReceived(bytes) }
         horizontal_wave.clearWave()
     }
 
@@ -336,6 +258,7 @@ class AudioRecorderView @JvmOverloads constructor(
     private var customPauseIcon: Drawable? = null
     private var customStopIcon: Drawable? = null
     private var customDeleteIcon: Drawable? = null
+    private var customBackground: Drawable? = null
     private var customBaseColor: Int = 0
 
     private var customRecordIconTint: Int = 0
@@ -363,6 +286,7 @@ class AudioRecorderView @JvmOverloads constructor(
             customPauseIcon = typedArray.getDrawable(R.styleable.AudioRecorderView_pauseIcon)
             customStopIcon = typedArray.getDrawable(R.styleable.AudioRecorderView_stopIcon)
             customDeleteIcon = typedArray.getDrawable(R.styleable.AudioRecorderView_deleteIcon)
+            customBackground = typedArray.getDrawable(R.styleable.AudioRecorderView_background)
             customBaseColor = typedArray.getColor(R.styleable.AudioRecorderView_baseColor, 0)
 
             customRecordIconTint =
@@ -396,6 +320,7 @@ class AudioRecorderView @JvmOverloads constructor(
         customPauseIcon?.let { pause_button.setImageDrawable(customPauseIcon) }
         customStopIcon?.let { stop_button.setImageDrawable(customStopIcon) }
         customDeleteIcon?.let { delete_button.setImageDrawable(customDeleteIcon) }
+        customBackground?.let { anp_ar_component_layout.background = customBackground }
 
         if (customBaseColor != 0) {
             record_button.setColorFilter(customBaseColor)
@@ -412,14 +337,15 @@ class AudioRecorderView @JvmOverloads constructor(
             delete_button.setColorFilter(customBaseColorLighter)
 
             play_pause_seek.apply {
-                thumb.setColorFilter(customBaseColor, PorterDuff.Mode.SRC_ATOP)
-                progressDrawable.setColorFilter(customBaseColor, PorterDuff.Mode.SRC_ATOP)
+                thumb.colorFilter = PorterDuffColorFilter(customBaseColor, PorterDuff.Mode.SRC_ATOP)
+                progressDrawable.colorFilter =
+                    PorterDuffColorFilter(customBaseColor, PorterDuff.Mode.SRC_ATOP)
             }
 
-            // TODO quando colocar opção customizada para background não aplicar esse trecho de código
-            anp_ar_component_layout.background?.setColorFilter(
-                customBaseColor, PorterDuff.Mode.SRC_ATOP
-            )
+            if (customBackground == null) {
+                anp_ar_component_layout.background?.colorFilter =
+                    PorterDuffColorFilter(customBaseColor, PorterDuff.Mode.SRC_ATOP)
+            }
         }
 
         if (customRecordIconTint != 0) {
@@ -442,15 +368,15 @@ class AudioRecorderView @JvmOverloads constructor(
             horizontal_wave.setWaveColor(customWaveTint)
         }
         if (customBackgroundTint != 0) {
-            // TODO quando colocar opção customizada para background não aplicar esse trecho de código
-            anp_ar_component_layout.background?.setColorFilter(
-                customBackgroundTint, PorterDuff.Mode.SRC_ATOP
-            )
+            anp_ar_component_layout.background?.colorFilter =
+                PorterDuffColorFilter(customBackgroundTint, PorterDuff.Mode.SRC_ATOP)
         }
         if (customProgressTint != 0) {
             play_pause_seek.apply {
-                thumb.setColorFilter(customProgressTint, PorterDuff.Mode.SRC_ATOP)
-                progressDrawable.setColorFilter(customProgressTint, PorterDuff.Mode.SRC_ATOP)
+                thumb.colorFilter =
+                    PorterDuffColorFilter(customProgressTint, PorterDuff.Mode.SRC_ATOP)
+                progressDrawable.colorFilter =
+                    PorterDuffColorFilter(customProgressTint, PorterDuff.Mode.SRC_ATOP)
             }
         }
 
@@ -468,8 +394,6 @@ class AudioRecorderView @JvmOverloads constructor(
 
     ////////////////////////////////record/////////////////////////////
     private fun onRecordButtonClicked() {
-        record_button
-
         play_button.isVisible = false
         pause_button.isVisible = false
         record_button.isVisible = false
@@ -544,8 +468,6 @@ class AudioRecorderView @JvmOverloads constructor(
         play_pause_seek.isVisible = true
         timer_view_current.isVisible = true
 
-        audioCapture.start()
-
         if (!isMediaPlayerPrepared) {
             val fis = FileInputStream(recordFile)
             try {
@@ -613,9 +535,7 @@ class AudioRecorderView @JvmOverloads constructor(
             }
 
             setMediaPlayerProgress(play_pause_seek.progress)
-
             mediaPlayer.start()
-            audioCapture.start()
 
             postDelayed({ updateMediaPlayerProgress() }, milliSecondsPerPercentage)
         }
@@ -631,7 +551,6 @@ class AudioRecorderView @JvmOverloads constructor(
         play_pause_seek.isVisible = true
         timer_view_current.isVisible = true
 
-        audioCapture.stop()
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
 
@@ -639,8 +558,6 @@ class AudioRecorderView @JvmOverloads constructor(
             onIPauseListener?.onPause()
         }
     }
-
-    private fun onFftListenerReceived(bytes: ByteArray?) {}
 
     ///////////////////////////////////////delete ////////////////////////////
     private fun onDeleteButtonClicked() {
