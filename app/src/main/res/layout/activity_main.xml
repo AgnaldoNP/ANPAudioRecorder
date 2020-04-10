@@ -19,21 +19,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:minHeight="@dimen/anp_ar_min_height"/>
+            android:minHeight="@dimen/anp_ar_min_height" />
 
         <pereira.agnaldo.audiorecorder.AudioRecorderView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:minHeight="@dimen/anp_ar_min_height"
-            app:recordIcon="@drawable/ic_headset_mic"
+            app:baseColor="#FF0000" />
+
+        <pereira.agnaldo.audiorecorder.AudioRecorderView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:minHeight="@dimen/anp_ar_min_height"
+            app:background="@drawable/custom_bg_layout_1"
+            app:baseColor="#FF0000"
+            app:currentTimeTint="#F8A007"
+            app:playProgressTint="#FF0"
             app:recordIconTint="#0000FF"
             app:recordWaveTint="#00FF00"
-            app:playProgressTint="#FF0"
-            app:backgroundTint="#090090"
-            app:currentTimeTint="#F8A007"
-            app:totalTimeTint="#FF00FB"
-            app:baseColor="#FF0000"/>
+            app:totalTimeTint="#FF00FB" />
 
     </LinearLayout>
 
