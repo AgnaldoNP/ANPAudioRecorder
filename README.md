@@ -224,3 +224,8 @@ recordView.setOnDelete() -> {
 This project made use of [NaraeAudioRecorder](https://github.com/WindSekirun/NaraeAudioRecorder) by [WindSekirun](https://github.com/WindSekirun) to enable record audio functionality.
 
 Contributions are welcome. Create a new pull request in order to submit your fixes and they shall be merged after moderation. In case of any issues, bugs or any suggestions, either create a new issue or post comments in already active relevant issues
+
+## Please consider supporting me
+Bitcoin URI: bitcoin:BC1Q4RT2KNSX28CA4H5YA08VF0SXMG3JPHKS6GWDXV?label=Consider%20support%20me
+
+Bitcoin Address: bc1q4rt2knsx28ca4h5ya08vf0sxmg3jphks6gwdxv
